@@ -1,0 +1,226 @@
+@page
+@model JobAggregator.Web.Pages.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <h1 class="mb-4">Your Job Dashboard</h1>
+
+    <div class="row">
+        <!-- Stats Cards -->
+        <div class="col-md-12 mb-4">
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-primary text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase">New Jobs</h6>
+                                    <h2 class="mb-0">@Model.NewJobsCount</h2>
+                                    <small>in the last 24 hours</small>
+                                </div>
+                                <i class="bi bi-briefcase fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-success text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase">Saved Jobs</h6>
+                                    <h2 class="mb-0">@Model.SavedJobsCount</h2>
+                                    <small>jobs you've saved</small>
+                                </div>
+                                <i class="bi bi-bookmark-heart fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-warning text-dark h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase">Keywords</h6>
+                                    <h2 class="mb-0">@Model.UserKeywords.Count</h2>
+                                    <small>tracking for you</small>
+                                </div>
+                                <i class="bi bi-tags fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card bg-info text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="text-uppercase">Notifications</h6>
+                                    <h2 class="mb-0">@Model.UnreadNotificationsCount</h2>
+                                    <small>unread alerts</small>
+                                </div>
+                                <i class="bi bi-bell fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-8">
+            <!-- Saved Jobs Section -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recently Saved Jobs</h5>
+                    <a asp-page="/Jobs/SavedJobs" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.SavedJobs.Any())
+                    {
+                        <div class="list-group">
+                            @foreach (var savedJob in Model.SavedJobs)
+                            {
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1">@savedJob.Job.Title</h5>
+                                        <form method="post" asp-page-handler="RemoveSavedJob" asp-route-savedJobId="@savedJob.Id">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                    <p class="mb-1">@savedJob.Job.CompanyName</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            Saved on @savedJob.SavedDate.ToString("MMM dd, yyyy")
+                                        </small>
+                                        <a href="@savedJob.Job.JobUrl" target="_blank" class="btn btn-sm btn-primary">
+                                            View Job <i class="bi bi-box-arrow-up-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            You haven't saved any jobs yet. Browse your <a asp-page="/Jobs/PersonalizedFeed">personalized feed</a> to find and save jobs.
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Job Feed Preview -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Job Feed</h5>
+                    <a asp-page="/Jobs/PersonalizedFeed" class="btn btn-sm btn-outline-primary">Go to Feed</a>
+                </div>
+                <div class="card-body">
+                    <p>Total of <strong>@Model.TotalJobsCount</strong> active jobs available in your feed.</p>
+                    <p>We found <strong>@Model.NewJobsCount</strong> new jobs in the last 24 hours that might interest you.</p>
+                    <a asp-page="/Jobs/PersonalizedFeed" class="btn btn-primary">Browse Jobs</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Resume Section -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Your Resume</h5>
+                    <a asp-page="/Resume/Upload" class="btn btn-sm btn-outline-primary">
+                        @(Model.UserResume != null ? "Update" : "Upload")
+                    </a>
+                </div>
+                <div class="card-body">
+                    @if (Model.UserResume != null)
+                    {
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="bi bi-file-earmark-pdf text-danger fs-1 me-3"></i>
+                            <div>
+                                <h6 class="mb-0">@Model.UserResume.FileName</h6>
+                                <small class="text-muted">
+                                    Uploaded on @Model.UserResume.UploadDate.ToString("MMM dd, yyyy")
+                                </small>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a asp-page="/Resume/View" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            <a asp-page="/Resume/Upload" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-arrow-repeat"></i> Update
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <p>You haven't uploaded your resume yet.</p>
+                            <p>Upload your resume to get better job recommendations and enable quick applications.</p>
+                            <a asp-page="/Resume/Upload" class="btn btn-primary">Upload Resume</a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Keywords Section -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Your Keywords</h5>
+                    <a asp-page="/Jobs/PersonalizedFeed" class="btn btn-sm btn-outline-primary">Manage</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.UserKeywords.Any())
+                    {
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            @foreach (var keyword in Model.UserKeywords)
+                            {
+                                <span class="badge bg-primary p-2">@keyword.KeywordText</span>
+                            }
+                        </div>
+                        <a asp-page="/Jobs/PersonalizedFeed" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-pencil"></i> Edit Keywords
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <p>You haven't added any keywords yet.</p>
+                            <p>Keywords help us find relevant jobs for you.</p>
+                            <a asp-page="/Jobs/PersonalizedFeed" class="btn btn-primary">Add Keywords</a>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Notifications Preview -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Notifications</h5>
+                    <a asp-page="/Notifications/Index" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    @if (Model.UnreadNotificationsCount > 0)
+                    {
+                        <div class="alert alert-info">
+                            You have @Model.UnreadNotificationsCount unread notifications.
+                        </div>
+                        <a asp-page="/Notifications/Index" class="btn btn-primary">View Notifications</a>
+                    }
+                    else
+                    {
+                        <p>No new notifications.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

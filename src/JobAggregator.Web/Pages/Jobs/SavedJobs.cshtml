@@ -1,0 +1,199 @@
+@page
+@model JobAggregator.Web.Pages.Jobs.SavedJobsModel
+@{
+    ViewData["Title"] = "Saved Jobs";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar with filters -->
+        <div class="col-md-3 col-lg-2 bg-light p-3 border-end">
+            <h5>Filter Saved Jobs</h5>
+            <form method="get" id="filterForm">
+                <div class="mb-3">
+                    <label for="SearchTerm" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="SearchTerm" asp-for="SearchTerm" placeholder="Search jobs...">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="DateFilter" class="form-label">Saved Date</label>
+                    <select class="form-select" id="DateFilter" asp-for="DateFilter">
+                        <option value="">Any time</option>
+                        <option value="today">Last 24 hours</option>
+                        <option value="week">Last week</option>
+                        <option value="month">Last month</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="Company" class="form-label">Company</label>
+                    <select class="form-select" id="Company" asp-for="Company">
+                        <option value="">All companies</option>
+                        @foreach (var company in Model.AvailableCompanies)
+                        {
+                            <option value="@company">@company</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="JobType" class="form-label">Job Type</label>
+                    <select class="form-select" id="JobType" asp-for="JobType">
+                        <option value="">All types</option>
+                        @foreach (var jobType in Model.AvailableJobTypes)
+                        {
+                            <option value="@jobType">@jobType</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="IsRemote" asp-for="IsRemote">
+                    <label class="form-check-label" for="IsRemote">Remote only</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                <a href="@Url.Page("./SavedJobs")" class="btn btn-outline-secondary w-100 mt-2">Clear Filters</a>
+            </form>
+        </div>
+        
+        <!-- Main content with saved job listings -->
+        <div class="col-md-9 col-lg-10 p-3">
+            <h1>@ViewData["Title"]</h1>
+            
+            @if (!Model.SavedJobs.Any())
+            {
+                <div class="alert alert-info">
+                    <h4>No saved jobs found</h4>
+                    <p>You haven't saved any jobs yet, or none match your current filters.</p>
+                    <a asp-page="/Jobs/PersonalizedFeed" class="btn btn-primary">Browse Jobs</a>
+                </div>
+            }
+            else
+            {
+                <p>Found @Model.SavedJobs.Count saved jobs</p>
+                
+                <div class="job-list">
+                    @foreach (var savedJob in Model.SavedJobs)
+                    {
+                        <div class="card mb-3 job-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">@savedJob.Job.Title</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">@savedJob.Job.CompanyName</h6>
+                                    </div>
+                                    <form method="post" asp-page-handler="Remove" asp-route-savedJobId="@savedJob.Id" onsubmit="return confirm('Are you sure you want to remove this saved job?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary me-2">@savedJob.Job.SourcePlatform</span>
+                                    @if (!string.IsNullOrEmpty(savedJob.Job.JobType))
+                                    {
+                                        <span class="badge bg-info me-2">@savedJob.Job.JobType</span>
+                                    }
+                                    @if (savedJob.Job.IsRemote)
+                                    {
+                                        <span class="badge bg-success me-2">Remote</span>
+                                    }
+                                </div>
+                                
+                                <div class="mb-2">
+                                    @if (!string.IsNullOrEmpty(savedJob.Job.Location))
+                                    {
+                                        <div class="text-muted">
+                                            <i class="bi bi-geo-alt"></i> @savedJob.Job.Location
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(savedJob.Job.Salary))
+                                    {
+                                        <div class="text-muted">
+                                            <i class="bi bi-cash"></i> @savedJob.Job.Salary
+                                        </div>
+                                    }
+                                </div>
+                                
+                                @if (!string.IsNullOrEmpty(savedJob.Job.Description))
+                                {
+                                    <div class="job-description mb-3">
+                                        @{
+                                            var shortDescription = savedJob.Job.Description.Length > 300 
+                                                ? savedJob.Job.Description.Substring(0, 300) + "..." 
+                                                : savedJob.Job.Description;
+                                        }
+                                        <p>@Html.Raw(shortDescription)</p>
+                                    </div>
+                                }
+                                
+                                <!-- Notes section -->
+                                <div class="mb-3">
+                                    <div class="accordion" id="notesAccordion-@savedJob.Id">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="notesHeading-@savedJob.Id">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                                        data-bs-target="#notesCollapse-@savedJob.Id" aria-expanded="false" 
+                                                        aria-controls="notesCollapse-@savedJob.Id">
+                                                    <i class="bi bi-sticky me-2"></i> Notes
+                                                </button>
+                                            </h2>
+                                            <div id="notesCollapse-@savedJob.Id" class="accordion-collapse collapse" 
+                                                 aria-labelledby="notesHeading-@savedJob.Id" data-bs-parent="#notesAccordion-@savedJob.Id">
+                                                <div class="accordion-body">
+                                                    <form method="post" asp-page-handler="AddNote" asp-route-savedJobId="@savedJob.Id">
+                                                        <div class="mb-3">
+                                                            <textarea class="form-control" name="note" rows="3" 
+                                                                      placeholder="Add notes about this job...">@savedJob.Notes</textarea>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-sm btn-primary">Save Notes</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        Saved on: @savedJob.SavedDate.ToString("MMM dd, yyyy")
+                                    </small>
+                                    <a href="@savedJob.Job.JobUrl" target="_blank" class="btn btn-primary btn-sm">
+                                        View Job <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .job-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        
+        .job-description {
+            max-height: 150px;
+            overflow: hidden;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-submit form when select filters change
+            $('#DateFilter, #Company, #JobType, #IsRemote').change(function() {
+                $('#filterForm').submit();
+            });
+        });
+    </script>
+}

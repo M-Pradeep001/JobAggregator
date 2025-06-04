@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "VVdA8yK7larZN8zwDgxB+2D0yC+5wFfXJRDTv6sn8pI=",
+  "Source": "JobAggregator.Api",
+  "BasePath": "_content/JobAggregator.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

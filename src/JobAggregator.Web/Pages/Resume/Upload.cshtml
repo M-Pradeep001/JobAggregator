@@ -1,0 +1,69 @@
+@page
+@model JobAggregator.Web.Pages.Resume.UploadModel
+@{
+    ViewData["Title"] = "Upload Resume";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h3 mb-0">@(Model.ExistingResume != null ? "Update" : "Upload") Your Resume</h1>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+                    {
+                        <div class="alert @(Model.IsSuccess ? "alert-success" : "alert-danger")">
+                            @Model.StatusMessage
+                        </div>
+                    }
+
+                    <form method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        @if (Model.ExistingResume != null)
+                        {
+                            <div class="alert alert-info mb-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-file-earmark-pdf text-danger fs-1 me-3"></i>
+                                    <div>
+                                        <h6 class="mb-0">Current Resume: @Model.ExistingResume.FileName</h6>
+                                        <small>Uploaded on @Model.ExistingResume.UploadDate.ToString("MMM dd, yyyy")</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Upload Resume (PDF format)</label>
+                            <input type="file" class="form-control" name="ResumeFile" accept=".pdf" required />
+                            <div class="form-text">
+                                Maximum file size: 5MB. Only PDF files are accepted.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="extractKeywords" name="ExtractKeywords" checked />
+                                <label class="form-check-label" for="extractKeywords">
+                                    Extract keywords from resume for job matching
+                                </label>
+                                <div class="form-text">
+                                    We'll analyze your resume to suggest relevant keywords for better job matching.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a asp-page="/Dashboard/Index" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                @(Model.ExistingResume != null ? "Update Resume" : "Upload Resume")
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

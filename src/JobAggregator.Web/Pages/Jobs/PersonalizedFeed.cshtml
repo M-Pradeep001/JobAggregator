@@ -1,0 +1,223 @@
+@page
+@model JobAggregator.Web.Pages.Jobs.PersonalizedFeedModel
+@{
+    ViewData["Title"] = "Your Personalized Job Feed";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar with filters -->
+        <div class="col-md-3 col-lg-2 bg-light p-3 border-end">
+            <h5>Your Keywords</h5>
+            <div class="mb-3">
+                <form method="post" asp-page-handler="AddKeyword">
+                    <div class="input-group">
+                        <input type="text" class="form-control" asp-for="NewKeyword" placeholder="Add keyword...">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="mb-4">
+                @if (Model.UserKeywords.Any())
+                {
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var keyword in Model.UserKeywords)
+                        {
+                            <div class="badge bg-primary d-flex align-items-center p-2">
+                                <span>@keyword</span>
+                                <form method="post" asp-page-handler="DeleteKeyword" asp-route-keyword="@keyword" class="ms-2">
+                                    <button type="submit" class="btn-close btn-close-white" aria-label="Delete"></button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        Add keywords to personalize your job feed
+                    </div>
+                }
+            </div>
+            
+            <h5>Filters</h5>
+            <form method="get" id="filterForm">
+                <div class="mb-3">
+                    <label for="SearchTerm" class="form-label">Search</label>
+                    <input type="text" class="form-control" id="SearchTerm" asp-for="SearchTerm" placeholder="Search jobs...">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="DateFilter" class="form-label">Date Posted</label>
+                    <select class="form-select" id="DateFilter" asp-for="DateFilter">
+                        <option value="">Any time</option>
+                        <option value="today">Last 24 hours</option>
+                        <option value="week">Last week</option>
+                        <option value="month">Last month</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="Company" class="form-label">Company</label>
+                    <select class="form-select" id="Company" asp-for="Company">
+                        <option value="">All companies</option>
+                        @foreach (var company in Model.AvailableCompanies)
+                        {
+                            <option value="@company">@company</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="JobType" class="form-label">Job Type</label>
+                    <select class="form-select" id="JobType" asp-for="JobType">
+                        <option value="">All types</option>
+                        @foreach (var jobType in Model.AvailableJobTypes)
+                        {
+                            <option value="@jobType">@jobType</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="Location" class="form-label">Location</label>
+                    <select class="form-select" id="Location" asp-for="Location">
+                        <option value="">All locations</option>
+                        @foreach (var location in Model.AvailableLocations)
+                        {
+                            <option value="@location">@location</option>
+                        }
+                    </select>
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="IsRemote" asp-for="IsRemote">
+                    <label class="form-check-label" for="IsRemote">Remote only</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                <a href="@Url.Page("./PersonalizedFeed")" class="btn btn-outline-secondary w-100 mt-2">Clear Filters</a>
+            </form>
+        </div>
+        
+        <!-- Main content with job listings -->
+        <div class="col-md-9 col-lg-10 p-3">
+            <h1>@ViewData["Title"]</h1>
+            
+            @if (!Model.UserKeywords.Any())
+            {
+                <div class="alert alert-warning">
+                    <h4>Welcome to your personalized job feed!</h4>
+                    <p>To get started, add some keywords on the left to help us find relevant jobs for you.</p>
+                    <p>Examples: "Software Engineer", "Machine Learning", "Frontend Developer", etc.</p>
+                </div>
+            }
+            else if (!Model.Jobs.Any())
+            {
+                <div class="alert alert-info">
+                    <h4>No jobs found</h4>
+                    <p>We couldn't find any jobs matching your criteria. Try adding more keywords or adjusting your filters.</p>
+                </div>
+            }
+            else
+            {
+                <p>Found @Model.Jobs.Count jobs matching your criteria</p>
+                
+                <div class="job-list">
+                    @foreach (var job in Model.Jobs)
+                    {
+                        <div class="card mb-3 job-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title">@job.Title</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">@job.CompanyName</h6>
+                                    </div>
+                                    <form method="post" asp-page-handler="SaveJob" asp-route-jobId="@job.Id">
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-bookmark-plus"></i> Save
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary me-2">@job.SourcePlatform</span>
+                                    @if (!string.IsNullOrEmpty(job.JobType))
+                                    {
+                                        <span class="badge bg-info me-2">@job.JobType</span>
+                                    }
+                                    @if (job.IsRemote)
+                                    {
+                                        <span class="badge bg-success me-2">Remote</span>
+                                    }
+                                </div>
+                                
+                                <div class="mb-2">
+                                    @if (!string.IsNullOrEmpty(job.Location))
+                                    {
+                                        <div class="text-muted">
+                                            <i class="bi bi-geo-alt"></i> @job.Location
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(job.Salary))
+                                    {
+                                        <div class="text-muted">
+                                            <i class="bi bi-cash"></i> @job.Salary
+                                        </div>
+                                    }
+                                </div>
+                                
+                                @if (!string.IsNullOrEmpty(job.Description))
+                                {
+                                    <div class="job-description mb-3">
+                                        @{
+                                            var shortDescription = job.Description.Length > 300 
+                                                ? job.Description.Substring(0, 300) + "..." 
+                                                : job.Description;
+                                        }
+                                        <p>@Html.Raw(shortDescription)</p>
+                                    </div>
+                                }
+                                
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        Posted: @(job.PostingDate.HasValue ? job.PostingDate.Value.ToString("MMM dd, yyyy") : "Unknown")
+                                    </small>
+                                    <a href="@job.JobUrl" target="_blank" class="btn btn-primary btn-sm">
+                                        View Job <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .job-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        
+        .job-description {
+            max-height: 150px;
+            overflow: hidden;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-submit form when select filters change
+            $('#DateFilter, #Company, #JobType, #Location, #IsRemote').change(function() {
+                $('#filterForm').submit();
+            });
+        });
+    </script>
+}

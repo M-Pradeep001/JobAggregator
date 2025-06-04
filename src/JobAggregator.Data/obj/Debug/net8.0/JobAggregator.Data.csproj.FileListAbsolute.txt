@@ -1,0 +1,14 @@
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/bin/Debug/net8.0/JobAggregator.Data.deps.json
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/bin/Debug/net8.0/JobAggregator.Data.runtimeconfig.json
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/bin/Debug/net8.0/JobAggregator.Data.dll
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/bin/Debug/net8.0/JobAggregator.Data.pdb
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.csproj.AssemblyReference.cache
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.AssemblyInfoInputs.cache
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.AssemblyInfo.cs
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.csproj.CoreCompileInputs.cache
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.dll
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/refint/JobAggregator.Data.dll
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.pdb
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/JobAggregator.Data.genruntimeconfig.cache
+/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/Debug/net8.0/ref/JobAggregator.Data.dll

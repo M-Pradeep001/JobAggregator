@@ -1,0 +1,65 @@
+DEPLOYMENT INSTRUCTIONS FOR JOB AGGREGATOR APPLICATION
+=================================================
+
+Follow these simple steps to deploy your Job Aggregator application to Vercel for free:
+
+STEP 1: PREPARE YOUR GITHUB REPOSITORY
+-------------------------------------
+1. Create a GitHub account if you don't have one (https://github.com/signup)
+2. Create a new repository named "JobAggregator"
+   - Go to https://github.com/new
+   - Enter "JobAggregator" as the repository name
+   - Choose Public or Private (your preference)
+   - Click "Create repository"
+3. Upload the zip file contents to your repository
+   - Click "uploading an existing file" on the repository page
+   - Drag and drop all files from the extracted zip folder
+   - Click "Commit changes"
+
+STEP 2: SIGN UP FOR VERCEL
+-------------------------
+1. Go to https://vercel.com/signup
+2. Choose "Continue with GitHub" to connect your GitHub account
+3. Complete the signup process
+
+STEP 3: DEPLOY TO VERCEL
+----------------------
+1. Once logged in to Vercel, click "Add New..." > "Project"
+2. Find and select your "JobAggregator" repository from the list
+3. Configure your project:
+   - Framework Preset: Select "Other"
+   - Root Directory: Leave as "./"
+   - Build Command: Leave default
+   - Output Directory: Leave default
+4. Click "Deploy"
+
+STEP 4: ACCESS YOUR WEBSITE
+-------------------------
+1. Wait for deployment to complete (usually takes 1-2 minutes)
+2. Vercel will provide you with a URL like: https://job-aggregator.vercel.app
+3. This is your permanent website URL!
+4. You can also set up a custom domain later if desired
+
+STEP 5: UPDATING YOUR WEBSITE
+---------------------------
+1. Make changes to your code locally
+2. Push changes to your GitHub repository
+3. Vercel will automatically redeploy your website
+
+IMPORTANT NOTES
+-------------
+- The free tier of Vercel has some limitations:
+  - Limited compute resources
+  - No persistent file storage (uploaded resumes will be lost on redeployment)
+  - Limited execution time for functions
+- For a student project, these limitations are usually not a problem
+
+TROUBLESHOOTING
+-------------
+- If deployment fails, check the Vercel logs for details
+- Make sure your code doesn't have any syntax errors
+- Verify that all files from the zip are uploaded to GitHub
+
+For more detailed instructions, refer to the deployment_guide.md file included in the zip.
+
+Enjoy your new Job Aggregator application!

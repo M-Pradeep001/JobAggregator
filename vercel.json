@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/JobAggregator.Web/JobAggregator.Web.csproj",
+      "use": "@vercel/dotnet"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/JobAggregator.Web/JobAggregator.Web.csproj"
+    }
+  ]
+}

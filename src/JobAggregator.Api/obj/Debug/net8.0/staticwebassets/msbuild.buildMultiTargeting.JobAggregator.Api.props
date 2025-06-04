@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../build/JobAggregator.Api.props" />
+</Project>
