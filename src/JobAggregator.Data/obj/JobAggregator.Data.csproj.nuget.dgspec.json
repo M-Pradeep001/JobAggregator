@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/ubuntu/JobAggregator/src/JobAggregator.Data/JobAggregator.Data.csproj": {}
+    "C:\\Users\\HP\\Downloads\\JobAggregator\\src\\JobAggregator.Data\\JobAggregator.Data.csproj": {}
   },
   "projects": {
-    "/home/ubuntu/JobAggregator/src/JobAggregator.Data/JobAggregator.Data.csproj": {
+    "C:\\Users\\HP\\Downloads\\JobAggregator\\src\\JobAggregator.Data\\JobAggregator.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/ubuntu/JobAggregator/src/JobAggregator.Data/JobAggregator.Data.csproj",
+        "projectUniqueName": "C:\\Users\\HP\\Downloads\\JobAggregator\\src\\JobAggregator.Data\\JobAggregator.Data.csproj",
         "projectName": "JobAggregator.Data",
-        "projectPath": "/home/ubuntu/JobAggregator/src/JobAggregator.Data/JobAggregator.Data.csproj",
-        "packagesPath": "/home/ubuntu/.nuget/packages/",
-        "outputPath": "/home/ubuntu/JobAggregator/src/JobAggregator.Data/obj/",
+        "projectPath": "C:\\Users\\HP\\Downloads\\JobAggregator\\src\\JobAggregator.Data\\JobAggregator.Data.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HP\\Downloads\\JobAggregator\\src\\JobAggregator.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/ubuntu/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,12 +32,21 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.12.1, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.16, )"
@@ -73,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.116/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

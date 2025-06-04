@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using JobAggregator.Data.Models;
 using JobAggregator.Data.Services.Scraping;
 using Microsoft.Extensions.DependencyInjection;
